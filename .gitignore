@@ -1,2 +1,6 @@
 /target
 .DS_Store
+node_modules
+www/app.js
+www/app.js.map
+www/pkg
