@@ -639,23 +639,23 @@ body {
 }
 
 .var-binding {
-    color: #2B72D7;
+    color: var(--sem-binding);
     font-weight: 500;
 }
 
 .var-ref {
-    color: #0d9488;
+    color: var(--sem-bound);
     transition: color 0.12s, text-shadow 0.12s;
 }
 
 .var-ref.free {
-    color: #FF431B;
+    color: var(--sem-free);
     font-style: italic;
 }
 
 .var-ref.binding-highlight {
     text-shadow: 0 0 8px rgba(43, 114, 215, 0.3);
-    color: #2B72D7;
+    color: var(--sem-binding);
 }
 
 .var-binding.binding-highlight {
@@ -684,7 +684,7 @@ body {
 
 /* Redex styling */
 .term-app.redex > .paren {
-    color: #000E54;
+    color: var(--sem-beta);
 }
 
 .term-app.redex.hovered {
@@ -725,7 +725,7 @@ body {
 }
 
 .show-redexes .term-app.redex > .paren {
-    color: #000E54;
+    color: var(--sem-beta);
 }
 
 /* Strategy tutorial: show all redexes with subtle outline, strategy-selected one in green */
@@ -746,7 +746,7 @@ body {
 }
 
 .show-strategy-redexes .term-app.redex.strategy-next > .paren {
-    color: #059669;
+    color: var(--sem-eta);
 }
 
 /* Fade-in animation for newly rendered terms */
@@ -804,7 +804,7 @@ body {
 
 .ctx-btn.beta {
     background: rgba(0, 14, 84, 0.10);
-    color: #000E54;
+    color: var(--sem-beta);
 }
 
 .ctx-btn.beta:hover {
@@ -814,7 +814,7 @@ body {
 
 .ctx-btn.alpha {
     background: rgba(43, 114, 215, 0.10);
-    color: #2B72D7;
+    color: var(--sem-alpha);
 }
 
 .ctx-btn.alpha:hover {
@@ -824,7 +824,7 @@ body {
 
 .ctx-btn.eta {
     background: rgba(5, 150, 105, 0.10);
-    color: #059669;
+    color: var(--sem-eta);
 }
 
 .ctx-btn.eta:hover {
@@ -856,14 +856,14 @@ body {
 .alpha-tag {
     font-size: 0.8em;
     font-weight: 700;
-    color: #2B72D7;
+    color: var(--sem-alpha);
     opacity: 0.5;
 }
 
 .alpha-old {
     font-size: 0.95em;
     font-weight: 600;
-    color: #2B72D7;
+    color: var(--sem-alpha);
 }
 
 .alpha-arrow {
@@ -1365,17 +1365,17 @@ body {
 }
 
 .tut-beta {
-    color: #000E54;
+    color: var(--sem-beta);
     font-family: 'JetBrains Mono', monospace;
 }
 
 .tut-alpha {
-    color: #2B72D7;
+    color: var(--sem-alpha);
     font-family: 'JetBrains Mono', monospace;
 }
 
 .tut-var-bound {
-    color: #0d9488;
+    color: var(--sem-bound);
 }
 
 .tutorial-footer {

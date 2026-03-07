@@ -86,9 +86,17 @@ cargo test                               # Run all 109 Rust tests
 - **esbuild (not webpack)**: Zero-config, sub-second builds. Bundle=true inlines `types.ts`, external for WASM import.
 - **Path encoding**: Subterm paths are strings like `"LBR"` (Left, Body, Right). Empty string = root.
 - **Derivation tree is TS-only**: The tree stores display strings. Navigating to a node re-parses via `engine.parse_and_set()`.
+- **Self-loop edges**: When a term reduces to itself (e.g., omega), `children` gets a self-edge but `parentIds` is NOT modified. This preserves correct DAG layout (depth computation, layer assignment).
 - **Only actionable terms highlight**: `.term.has-op` class gates all hover/click behavior.
 - **URL linking**: Other pages can link with `?term=...` URL parameter.
 - **Empty string is NOT falsy for strategy_next**: `strategy_next` is `string | null`. Root-level redexes have path `""`. Always use `== null` checks, never truthiness.
+- **CSS custom properties for all colors**: Brand colors (`--brand-*`) and semantic colors (`--sem-beta`, `--sem-alpha`, `--sem-eta`, `--sem-bound`, `--sem-free`, `--sem-binding`) are centralized in `:root`. Change the palette in one place.
+
+## Tutorial / Interactive Lecture System
+
+The 15-slide interactive tutorial is defined as a `TutorialStep[]` array in `www/src/app.ts`. Each slide can load a term, auto-step, demo strategies, or run the Church-Rosser convergence demo.
+
+See **[`docs/TUTORIAL_AUTHORING.md`](docs/TUTORIAL_AUTHORING.md)** for the full guide on adding slides and building lectures.
 
 ## CIS352 Syntax Reference
 
@@ -117,6 +125,8 @@ lambda-playground/
 │   └── render.rs       # JSON render tree builder
 ├── tests/
 │   └── integration.rs  # 23 integration tests
+├── docs/
+│   └── TUTORIAL_AUTHORING.md  # Guide: adding slides & building lectures
 ├── www/
 │   ├── index.html      # SPA HTML
 │   ├── style.css       # All styles

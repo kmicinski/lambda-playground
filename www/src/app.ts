@@ -1710,7 +1710,6 @@ function endTutorial(): void {
     if (tutorialFab) tutorialFab.classList.remove('hidden');
 }
 
-const TREE_STEP_INDEX = TUTORIAL_STEPS.findIndex(s => s.title === 'The Derivation Tree');
 
 function showTreeCallout(show: boolean): void {
     const el = document.getElementById('tree-callout');
@@ -1997,5 +1996,3 @@ function showWelcomeNudge(): void {
     el.addEventListener('mouseenter', () => clearTimeout(autoTimer));
 }
 
-// Suppress unused variable warning for TREE_STEP_INDEX
-void TREE_STEP_INDEX;
