@@ -236,7 +236,8 @@ class DerivationTree {
             const edgeExists = parentNode.children.some(c => c.id === existingId);
             if (!edgeExists) {
                 parentNode.children.push({ id: existingId, opLabel, redexPath: redexPath || '' });
-                if (!existing.parentIds.includes(parentId)) {
+                // Don't add self-references to parentIds (self-loops are tracked via children only)
+                if (existingId !== parentId && !existing.parentIds.includes(parentId)) {
                     existing.parentIds.push(parentId);
                 }
             }
@@ -280,7 +281,13 @@ class DerivationTree {
     }
 
     canUndo(): boolean { return this.navHistory.length > 0; }
-    hasMultipleNodes(): boolean { return this.nodes.size > 1; }
+    hasEdges(): boolean {
+        if (this.nodes.size > 1) return true;
+        for (const node of this.nodes.values()) {
+            if (node.children.length > 0) return true;
+        }
+        return false;
+    }
 
     hasBranches(): boolean {
         for (const node of this.nodes.values()) {
@@ -783,6 +790,7 @@ function renderCurrentTerm(): void {
     let yAccum = pad;
     for (let d = 0; d < layers.length; d++) {
         const layerIds = layers[d]!;
+        if (layerIds.length === 0) continue;
         const maxH = Math.max(...layerIds.map(id => measuredH.get(id) || MNODE_H));
         for (const id of layerIds) yPositions.set(id, yAccum);
         yAccum += maxH + MV_GAP;
@@ -816,14 +824,14 @@ function renderCurrentTerm(): void {
     for (const [id, color] of [['main-arrow', '#FDDCB5'], ['main-arrow-active', '#F76900']] as const) {
         const marker = document.createElementNS(NS, 'marker');
         marker.setAttribute('id', id);
-        marker.setAttribute('viewBox', '0 0 10 8');
-        marker.setAttribute('refX', '10');
-        marker.setAttribute('refY', '4');
-        marker.setAttribute('markerWidth', '10');
-        marker.setAttribute('markerHeight', '8');
+        marker.setAttribute('viewBox', '0 0 10 10');
+        marker.setAttribute('refX', '9');
+        marker.setAttribute('refY', '5');
+        marker.setAttribute('markerWidth', '6');
+        marker.setAttribute('markerHeight', '6');
         marker.setAttribute('orient', 'auto');
         const arrow = document.createElementNS(NS, 'path');
-        arrow.setAttribute('d', 'M0,1 L10,4 L0,7 Z');
+        arrow.setAttribute('d', 'M1,2 L9,5 L1,8 Z');
         arrow.setAttribute('fill', color);
         marker.appendChild(arrow);
         defs.appendChild(marker);
@@ -1380,7 +1388,7 @@ function getActivePath(): Set<number> {
 function renderDerivationTree(): void {
     if (!treeView || !treePanel) return;
 
-    if (dtree.hasMultipleNodes()) {
+    if (dtree.hasEdges()) {
         treePanel.classList.remove('hidden');
     } else {
         treePanel.classList.add('hidden');
