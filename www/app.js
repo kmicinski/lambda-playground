@@ -511,8 +511,10 @@ function showContextMenu(x, y, ops) {
         btn.textContent = op === 'beta' ? '\u03b2' : op === 'eta' ? '\u03b7' : '\u03b1';
         btn.addEventListener('click', (e) => {
             e.stopPropagation();
+            const path = contextMenuPath;
+            const alphaTarget = contextMenu.dataset.alphaTarget;
             hideContextMenu();
-            handleOperation(op);
+            handleOperation(op, path, alphaTarget);
         });
         contextMenu.appendChild(btn);
     }
@@ -536,17 +538,16 @@ function hideContextMenu() {
     contextMenuPath = null;
 }
 
-function handleOperation(op) {
+function handleOperation(op, path, alphaTarget) {
     if (op === 'alpha') {
-        showAlphaDialog();
+        showAlphaDialog(alphaTarget || path);
         return;
     }
-    performOperation(contextMenuPath, op, '');
+    performOperation(path, op, '');
 }
 
 // --- Alpha Dialog ---
-function showAlphaDialog() {
-    const target = contextMenu.dataset.alphaTarget || contextMenuPath;
+function showAlphaDialog(target) {
     alphaOverlay.classList.remove('hidden');
     alphaNameInput.value = '';
     alphaOverlay.dataset.targetPath = target;
