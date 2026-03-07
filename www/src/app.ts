@@ -377,6 +377,47 @@ async function main(): Promise<void> {
     } else {
         requestAnimationFrame(maybeShowWelcome);
     }
+
+    // Listen for postMessage commands from parent frame (lecture-explorer)
+    window.addEventListener('message', (event: MessageEvent) => {
+        const data = event.data;
+        if (!data || typeof data.type !== 'string') return;
+        switch (data.type) {
+            case 'loadTerm':
+                if (typeof data.term === 'string') {
+                    termInput.value = data.term;
+                    loadNewTerm(data.term);
+                }
+                break;
+            case 'setStrategy':
+                if (typeof data.strategy === 'string') {
+                    engine.set_strategy(data.strategy);
+                    renderCurrentTerm();
+                }
+                break;
+            case 'step': {
+                try {
+                    const preInfo: TermInfo = JSON.parse(engine.get_term_info());
+                    const redexPath = preInfo.strategy_next || '';
+                    engine.step_strategy();
+                    const display = engine.get_display();
+                    const renderTreeJson = engine.get_render_tree();
+                    dtree.addChild(display, '\u03b2', renderTreeJson, redexPath);
+                    stepCount++;
+                    renderCurrentTerm();
+                } catch (_) { /* no redex available */ }
+                break;
+            }
+            case 'reset':
+                termInput.value = '';
+                break;
+        }
+    });
+
+    // Notify parent that the explorer is ready
+    if (window.parent !== window) {
+        window.parent.postMessage({ type: 'ready' }, '*');
+    }
 }
 
 main().catch(console.error);
@@ -2058,6 +2099,8 @@ if (tutorialCloseBtn) tutorialCloseBtn.addEventListener('click', endTutorial);
 
 // --- Welcome Nudge ---
 function maybeShowWelcome(): void {
+    // Don't show welcome when embedded in an iframe (e.g., lecture-explorer)
+    if (window.parent !== window) return;
     try {
         if (sessionStorage.getItem('lambda_welcomed')) return;
     } catch (_) { /* private browsing */ }
