@@ -391,8 +391,13 @@ async function main(): Promise<void> {
                 break;
             case 'setStrategy':
                 if (typeof data.strategy === 'string') {
-                    engine.set_strategy(data.strategy);
-                    renderCurrentTerm();
+                    setStrategy(data.strategy as StrategyName);
+                    // Flash the strategy group to draw attention
+                    const sg = document.getElementById('strategy-group');
+                    if (sg) {
+                        sg.classList.add('strategy-flash');
+                        setTimeout(() => sg.classList.remove('strategy-flash'), 600);
+                    }
                 }
                 break;
             case 'step': {
@@ -414,8 +419,10 @@ async function main(): Promise<void> {
         }
     });
 
-    // Notify parent that the explorer is ready
+    // When embedded in an iframe, hide tutorial FAB and notify parent
     if (window.parent !== window) {
+        const fab = document.getElementById('tutorial-fab');
+        if (fab) fab.classList.add('hidden');
         window.parent.postMessage({ type: 'ready' }, '*');
     }
 }
